@@ -11,7 +11,7 @@ import (
 // createTable creates a table, if it doesn't exist.  If the table
 // name includes the database name, e.g., "db.tbl", it creates the
 // database if necessary.
-func CreateTable(db *sql.DB, table string) error {
+func createTable(db *sql.DB, table string) error {
 	if ss := strings.Split(table, "."); len(ss) > 1 {
 		stmt := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;",
 			strings.Join(ss[:len(ss)-1], "."))

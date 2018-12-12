@@ -27,7 +27,7 @@ func Create(db *sql.DB, table string) (*Writer, error) {
 // Append returns a writer to append to an existing table.  It creates
 // the table if it doesn't exist.
 func Append(db *sql.DB, table string) (*Writer, error) {
-	if e := CreateTable(db, table); e != nil {
+	if e := createTable(db, table); e != nil {
 		return nil, fmt.Errorf("Create: %v", e)
 	}
 	return &Writer{db, table, make([]byte, 0, kBufSize), nil}, nil

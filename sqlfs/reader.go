@@ -52,7 +52,7 @@ func (r *Reader) Read(p []byte) (n int, e error) {
 				if e != nil {
 					break
 				}
-			} else {
+			} else if n < len(p) {
 				e = io.EOF
 				break
 			}
