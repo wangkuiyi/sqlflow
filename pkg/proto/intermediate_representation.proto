@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package proto;
 
+// For message Session. TODO(wangkuiyi): Remove it once we move
+// Session out from the IR to an executor.
 import "sqlflow.proto";
 
 // Protobuf format intermediate representations for SQLFlow.
