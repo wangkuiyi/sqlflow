@@ -16,17 +16,19 @@ package xgboost
 import (
 	"bytes"
 	"text/template"
+
+	"golang.org/x/text/language"
 )
 
 // DocGenInMarkdown generates the doc of the XGBoost in Markdown format.
-func DocGenInMarkdown() string {
+func DocGenInMarkdown(language.Tag) string {
 	var doc bytes.Buffer
-	docTemplate.Execute(&doc, fullAttrValidator.GenerateTableInHTML())
-
+	docTemplate.Execute(&doc, fullAttrValidator.GenerateTableInHTML(lang))
 	return doc.String()
 }
 
-const docTemplateText = `# XGBoost Parameters
+const docTemplateText = map[language.Tag]string{
+	language.English: `# XGBoost Parameters
 
 ## TRAIN
 
@@ -55,6 +57,7 @@ TBD
 ## EXPLAIN
 
 TBD
-`
+`,
+	language.Chinese: `# XGBoost 参数`}
 
 var docTemplate = template.Must(template.New("Doc").Parse(docTemplateText))

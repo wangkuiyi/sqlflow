@@ -14,21 +14,36 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"regexp"
 	"strings"
 
+	"golang.org/x/text/language"
 	"sqlflow.org/sqlflow/pkg/sql/codegen/tensorflow"
 	"sqlflow.org/sqlflow/pkg/sql/codegen/xgboost"
 )
 
+const (
+	preemble = map[language.Tag]string{
+		language.English: `# Model Parameters
+
+Users can use the WITH-clause of SQLFlow extended syntax to specify
+hyperparameters of models. This document parameters that can appear
+in WITH-clause.
+`,
+		language.Chinese: `# 模型参数
+
+用户可以用 WITH 从句指定模型的超参数。本文档列出各种模型可以接受的超参数。
+`}
+)
+
 func main() {
-	fmt.Print(`# Model Parameter Document
+	l := flag.String("lang", "en", "language of generated documents")
+	flag.Parse()
+	lang := language.MustParse(*l)
 
-SQLFlow connects a SQL engine (e.g., MySQL, Hive, or MaxCompute) and TensorFlow and other machine learning toolkits by extending the SQL syntax. The extended SQL syntax contains the WITH clause where a user specifies the parameters of his/her ML jobs. This documentation lists all parameters supported by SQLFlow.
-
-`)
-
+	fmt.Print(premepble[lang])
 	docGenFunc := []func() string{
 		xgboost.DocGenInMarkdown,
 		tensorflow.DocGenInMarkdown,
@@ -36,7 +51,7 @@ SQLFlow connects a SQL engine (e.g., MySQL, Hive, or MaxCompute) and TensorFlow 
 
 	section := regexp.MustCompile(`^#{1,5} `)
 	for _, f := range docGenFunc {
-		lines := strings.Split(f(), "\n")
+		lines := strings.Split(f(lang), "\n")
 		for i := range lines {
 			// convert title -> section, section -> subsection
 			if section.MatchString(lines[i]) {
